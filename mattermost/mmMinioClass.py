@@ -21,8 +21,8 @@ class MinioClient():
     destination = None
     source = None
 
-    def __init__(self,minioConnect,pgConnect,bucketName='mattermost'):
-        self.bucket = bucketName
+    def __init__(self,minioConnect,pgConnect,sourceBucket='mattermost'):
+        self.bucket = sourceBucket
         self.pg = pgConnect
         self.cur = self.pg.cursor()
         self.client = minioConnect
@@ -36,13 +36,13 @@ class MinioClient():
                 fileId,
                 fileName)
 
-    def fileMove(self,destinationPath,sourcePath,sourceBucket='mattermost'):
+    def fileMove(self,destinationPath,sourcePath):
         """Move file from source to destination path"""
         self.destination = destinationPath
-        self.source = "/{}/{}".format(sourceBucket,sourcePath)
+        self.source = "/{}/{}".format(self.bucket,sourcePath)
         try:
             self.client.copy_object(self.bucket,self.destination,self.source)
-            self.client.remove_object(sourceBucket,sourcePath)
+            self.client.remove_object(self.bucket,sourcePath)
         except ResponseError as err:
             print(err)
 

@@ -8,6 +8,8 @@ Goal of this repo is to automate deployment and some initialization work that is
 -	python3 on the host where docker and the scripts are going to run
 	-	NOTE: scripts can run on any host if configured properly (mmBot.sh,mmConfig.sh)
 -	[python mattermost driver](https://github.com/Vaelor/python-mattermost-driver)
+-	[psycopg2](https://github.com/psycopg/psycopg2)
+-	[MinIO Client SDK for Python](https://github.com/minio/minio-py)
 
 `docker-compose.yml` required images that should be available(accessible by default unless firewall rules or other settings prevent that):   
 
@@ -62,9 +64,21 @@ docker-compose stop
 after this the shell scripts do all the work
 
 #### mmConfig.sh
+
+```
+# username is our system admin user that has access token
+# portNumber is the port where mattermost is listening on currently
+./mmConfing.sh username portNumber
+```
 is our script that calls `mmCreateTeams.py` with the required parameters and creates our teams and channels under teams respectively
 
 #### mmBot.sh
+
+```
+# username is our system admin user that has access token
+# portNumber is the port where mattermost is listening on currently
+./mmBot.sh username portNumber
+```
 
 Starts our `mmBot.py` script which monitors on all of the channels where our bot (script) is a member and prevents (deletes) every attempt of users trying to post direct messages or uploads to that channel.
 Can be useful if we want all files to originate from one user and that is what our script does here. 

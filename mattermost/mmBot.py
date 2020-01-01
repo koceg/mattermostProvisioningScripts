@@ -1,7 +1,6 @@
 import asyncio
 import sys
 import json
-import time
 import mmMinioClass
 from mattermostdriver import Driver
 

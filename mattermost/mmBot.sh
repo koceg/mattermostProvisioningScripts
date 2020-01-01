@@ -1,8 +1,13 @@
 #!/bin/bash
 
-MMPORT=8085
+MMPORT=$2
+MMUSER=$1
+MMUSERID=$(docker exec postgresql \
+  psql -U mattermost -t -c "select id from users where username='$MMUSER'" | \
+  tr -d [:blank:] )
 MMTOKEN=$(docker exec postgresql \
-  psql -U mattermost -t -c "select token from useraccesstokens;")
+  psql -U mattermost -t -c "select token from useraccesstokens \
+  where userid='$MMUSERID'")
 MMADDRESS=$(docker inspect \
   --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mattermost)
 MINIOADDRESS=$(docker inspect \

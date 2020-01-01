@@ -55,16 +55,16 @@ if __name__== "__main__":
                         "type":'O'
                         }
 
-                channelId=mmClient.channels.create_channel(options=payload)['id']
+                channeId=mmClient.channels.create_channel(options=payload)['id']
 
                 mmClient.channels.patch_channel(
-                        channel_id=channelId,
+                        channel_id=channeId,
                         options={
                                 'type':'O'
                                 })
 
                 mmClient.channels.add_user(
-                        channel_id=channelId,
+                        channel_id=channeId,
                         options={
                                 'user_id':bot['id']
                                 })
