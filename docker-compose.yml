@@ -1,0 +1,52 @@
+version: '3.7'
+
+networks:
+  mattermost:
+    external: true
+services:
+  postgres:
+    image: postgres:alpine
+    container_name: postgresql
+    environment: 
+      - POSTGRES_USER=
+      - POSTGRES_PASSWORD=
+    networks:
+      - mattermost
+  minio:
+    image: minio:latest
+    container_name: minio
+    environment: 
+      - MINIO_ACCESS_KEY=
+      - MINIO_SECRET_KEY=
+    command: ["server","/data"]
+    ports: 
+      - "9000:9000"
+    networks:
+      - mattermost
+    volumes: 
+      - "/tmp/minio:/data"
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.8.0
+    container_name: elasticsearch
+    volumes:
+      - "/tmp/elasticsearch:/usr/share/elasticsearch/data"
+    environment: 
+      - discovery.type=single-node
+    ports:
+      - 9200:9200
+      - 9300:9300
+    networks:
+      - mattermost
+  mattermost:
+    image: mattermost:5.17.0
+    container_name: mattermost
+    volumes: 
+      - "/tmp/mattermost:/mattermost/config"
+    ports: 
+      - "8085:8085"
+    networks:
+      - mattermost
+    depends_on:
+      - elasticsearch
+      - minio
+      - postgres
